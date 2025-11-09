@@ -5,4 +5,4 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    GEMINI_API_KEY ="AIzaSyD0v06oVqoaim3Apgk89VKSECfMBQI1V5k"
+    GEMINI_API_KEY =""

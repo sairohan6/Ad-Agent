@@ -51,7 +51,7 @@ export default function Login({ onLogin, setPage }) {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-6xl font-black tracking-tight"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-blue-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-cyan-200 to-blue-300">
               AD-Agent
             </span>
           </motion.h1>
@@ -75,17 +75,17 @@ export default function Login({ onLogin, setPage }) {
           <form onSubmit={handleSubmit} className="space-y-6">
             {isSignup && (
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-200 tracking-wide block">
+                <label className="text-sm font-semibold text-black-200 tracking-wide block">
                   Full Name
                 </label>
                 <div className="relative">
-                  <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <UserIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black-400" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="John Doe"
-                    className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
+                    placeholder="Your name"
+                    className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
                     required={isSignup}
                   />
                 </div>
@@ -93,34 +93,34 @@ export default function Login({ onLogin, setPage }) {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-200 tracking-wide block">
+              <label className="text-sm font-semibold text-black-200 tracking-wide block">
                 Email Address
               </label>
               <div className="relative">
-                <EnvelopeIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <EnvelopeIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black-400" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
+                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-200 tracking-wide block">
+              <label className="text-sm font-semibold text-black-400 tracking-wide block">
                 Password
               </label>
               <div className="relative">
-                <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <LockClosedIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black-400" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
+                  className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-base text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300"
                   required
                 />
               </div>

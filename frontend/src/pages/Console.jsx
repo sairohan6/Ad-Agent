@@ -89,10 +89,10 @@ export default function Console({ jobId, setResults, setPage }) {
             className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-full backdrop-blur-xl"
           >
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-            <span className="text-xs font-semibold text-cyan-300 tracking-wide uppercase">Pipeline Running</span>
+            <span className="text-xs font-semibold text-cyan-700 tracking-wide uppercase">Pipeline Running</span>
           </motion.div>
 
-          <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-blue-300">
+          <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-black via-cyan-200 to-blue-300">
             Building Your Model
           </h2>
           <p className="text-gray-400">Watch as our agents construct your anomaly detection pipeline</p>
@@ -136,7 +136,7 @@ export default function Console({ jobId, setResults, setPage }) {
                           key="active"
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 relative"
+                          className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-700 to-blue-700 flex items-center justify-center shadow-lg shadow-cyan-500/30 relative"
                         >
                           <Icon className="w-6 h-6 text-white" />
                           <motion.div
@@ -160,7 +160,7 @@ export default function Console({ jobId, setResults, setPage }) {
 
                   <div className="flex-1 pt-2">
                     <h3 className={`font-bold text-lg mb-1 transition-colors ${
-                      status === "done" ? "text-green-300" : status === "active" ? "text-cyan-300" : "text-gray-500"
+                      status === "done" ? "text-green-700" : status === "active" ? "text-cyan-300" : "text-gray-500"
                     }`}>
                       {step.label}
                     </h3>
@@ -171,7 +171,7 @@ export default function Console({ jobId, setResults, setPage }) {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         transition={{ delay: 0.2, duration: 0.3 }}
-                        className="mt-2 text-xs text-cyan-200 bg-cyan-500/10 px-3 py-2 rounded-lg border border-cyan-500/20"
+                        className="mt-2 text-xs text-cyan-700 bg-cyan-500/10 px-3 py-2 rounded-lg border border-cyan-500/20"
                       >
                         Parsed Command & Configuration Loaded
                       </motion.div>
@@ -194,7 +194,7 @@ export default function Console({ jobId, setResults, setPage }) {
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs font-semibold text-green-300"
+                        className="px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full text-xs font-semibold text-green-700"
                       >
                         Complete
                       </motion.div>
@@ -203,7 +203,7 @@ export default function Console({ jobId, setResults, setPage }) {
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-xs font-semibold text-cyan-300 flex items-center gap-2"
+                        className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/30 rounded-full text-xs font-semibold text-cyan-700 flex items-center gap-2"
                       >
                         <motion.div
                           animate={{ rotate: 360 }}

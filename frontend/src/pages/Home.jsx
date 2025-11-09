@@ -25,7 +25,7 @@ export default function Home({ setJobId, trainPath, testPath, onLogout }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           onClick={onLogout}
-          className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+          className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-black-300 hover:text-red-400 hover:bg-white/10 transition-all"
         >
           <ArrowRightOnRectangleIcon className="w-4 h-4" />
           <span className="text-sm font-semibold">Logout</span>
@@ -46,7 +46,7 @@ export default function Home({ setJobId, trainPath, testPath, onLogout }) {
             className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-full backdrop-blur-xl"
           >
             <SparklesIcon className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs font-semibold text-cyan-300 tracking-wide uppercase">AI-Powered Pipeline</span>
+            <span className="text-xs font-semibold text-cyan-700 tracking-wide uppercase">AI-Powered Pipeline</span>
           </motion.div>
 
           <motion.h1
@@ -55,7 +55,7 @@ export default function Home({ setJobId, trainPath, testPath, onLogout }) {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-7xl font-black tracking-tight"
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-blue-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-black via-cyan-200 to-blue-300">
               AD-Agent
             </span>
           </motion.h1>
@@ -83,13 +83,13 @@ export default function Home({ setJobId, trainPath, testPath, onLogout }) {
           </div>
 
           <div className="space-y-3">
-            <label className="text-sm font-semibold text-gray-200 tracking-wide block">
+            <label className="text-sm font-semibold text-black-200 tracking-wide block">
               Pipeline Command
             </label>
             <div className="relative">
               <textarea
                 rows={3}
-                className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 resize-none"
+                className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-base text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 resize-none"
                 placeholder="Example: Run IForest with contamination=0.1"
                 value={cmd}
                 onChange={(e) => setCmd(e.target.value)}

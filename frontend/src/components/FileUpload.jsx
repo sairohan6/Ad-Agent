@@ -19,7 +19,7 @@ export default function FileUpload({ label, onUploaded }) {
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-semibold text-gray-200 tracking-wide block">
+      <label className="text-sm font-semibold text-black-200 tracking-wide block">
         {label}
       </label>
 
@@ -102,12 +102,12 @@ export default function FileUpload({ label, onUploaded }) {
                   animate={isDragging ? { y: [0, -10, 0] } : {}}
                   transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-                  <ArrowUpTrayIcon className="w-12 h-12 text-gray-400 group-hover:text-cyan-400 transition-colors mb-3" />
+                  <ArrowUpTrayIcon className="w-12 h-12 text-black-400 group-hover:text-cyan-400 transition-colors mb-3" />
                 </motion.div>
-                <p className="text-gray-200 font-semibold text-base mb-1">
+                <p className="text-black-200 font-semibold text-base mb-1">
                   {isDragging ? "Drop your file here" : "Drag & drop or click to upload"}
                 </p>
-                <p className="text-gray-500 text-xs">Supports CSV, MAT, PT, NPY files</p>
+                <p className="text-black-500 text-xs">Supports CSV, MAT, PT, NPY files</p>
               </motion.div>
             )}
           </AnimatePresence>

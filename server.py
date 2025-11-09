@@ -20,7 +20,13 @@ from agents.agent_optimizer import AgentOptimizer
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ad-agent-secret-key-change-in-production'
-CORS(app)
+CORS(app,
+     resources={r"/*": {"origins": ["http://localhost:5173"]}},
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "OPTIONS"]
+)
+
 
 # MongoDB connection
 try:
@@ -209,8 +215,11 @@ def get_metadata(run_id):
 
 # ========== AUTH ENDPOINTS ==========
 
-@app.post("/auth/signup")
+@app.route("/auth/signup", methods=["POST", "OPTIONS"])
 def signup():
+    if request.method == "OPTIONS":
+        return ('', 200)
+
     if users_collection is None:
         return jsonify({"error": "Database not available"}), 500
 
@@ -222,14 +231,11 @@ def signup():
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
 
-    # Check if user already exists
     if users_collection.find_one({"email": email}):
         return jsonify({"error": "User already exists"}), 409
 
-    # Hash password
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    # Create user document
     user_doc = {
         "email": email,
         "password": hashed_password,
@@ -239,7 +245,6 @@ def signup():
 
     users_collection.insert_one(user_doc)
 
-    # Generate JWT token
     token = jwt.encode({
         "email": email,
         "exp": datetime.utcnow() + timedelta(days=7)
@@ -247,9 +252,11 @@ def signup():
 
     return jsonify({"token": token, "email": email, "name": name}), 201
 
-
-@app.post("/auth/login")
+@app.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
+    if request.method == "OPTIONS":
+        return ('', 200)
+
     if users_collection is None:
         return jsonify({"error": "Database not available"}), 500
 
@@ -260,22 +267,17 @@ def login():
     if not email or not password:
         return jsonify({"error": "Email and password are required"}), 400
 
-    # Find user
     user = users_collection.find_one({"email": email})
 
-    if not user:
+    if not user or not bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
         return jsonify({"error": "Invalid credentials"}), 401
 
-    # Verify password
-    if not bcrypt.checkpw(password.encode('utf-8'), user['password']):
-        return jsonify({"error": "Invalid credentials"}), 401
-
-    # Generate JWT token
     token = jwt.encode({
         "email": email,
         "exp": datetime.utcnow() + timedelta(days=7)
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({"token": token, "email": email, "name": user.get("name", "")}), 200
+
 
 app.run(port=8000, debug=False)
