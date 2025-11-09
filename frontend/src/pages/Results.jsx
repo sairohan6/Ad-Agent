@@ -156,6 +156,22 @@ export default function Results({ results }) {
                   <span className="text-gray-400">Model Type</span>
                   <span className="text-white font-semibold">Anomaly Detection</span>
                 </div>
+                {data.dataset_stats && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Samples</span>
+                      <span className="text-white font-semibold">{data.dataset_stats?.num_samples}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Features</span>
+                      <span className="text-white font-semibold">{data.dataset_stats?.num_features}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400">Anomalies Detected</span>
+                      <span className="text-white font-semibold">{data.dataset_stats?.num_anomalies}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

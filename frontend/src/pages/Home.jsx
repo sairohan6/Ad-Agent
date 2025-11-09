@@ -2,9 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import FileUpload from "../components/FileUpload";
 import { runPipeline } from "../api/backend";
-import { PlayIcon, SparklesIcon } from "@heroicons/react/24/solid";
+import { PlayIcon, SparklesIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 
-export default function Home({ setJobId, trainPath, testPath }) {
+export default function Home({ setJobId, trainPath, testPath, onLogout }) {
   const [cmd, setCmd] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +18,19 @@ export default function Home({ setJobId, trainPath, testPath }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900 via-[#0a0c1f] to-black flex justify-center items-center p-6 relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+
+      {onLogout && (
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          onClick={onLogout}
+          className="absolute top-6 right-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+        >
+          <ArrowRightOnRectangleIcon className="w-4 h-4" />
+          <span className="text-sm font-semibold">Logout</span>
+        </motion.button>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}

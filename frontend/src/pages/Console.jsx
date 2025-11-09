@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchResults } from "../api/backend";
+import { fetchResults, fetchMetadata } from "../api/backend";
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
 import { CpuChipIcon, MagnifyingGlassIcon, DocumentMagnifyingGlassIcon, CodeBracketIcon, EyeIcon, RocketLaunchIcon } from "@heroicons/react/24/outline";
 
@@ -16,6 +16,7 @@ const STEPS = [
 export default function Console({ jobId, setResults, setPage }) {
   const [progress, setProgress] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
+  const [metadata, setMetadata] = useState({});
 
   useEffect(() => {
     const stream = new EventSource(`http://127.0.0.1:8000/logs/${jobId}`);
@@ -26,10 +27,14 @@ export default function Console({ jobId, setResults, setPage }) {
       if (msg.includes("PROCESSOR DONE")) {
         setProgress(p => ({ ...p, PROCESSOR: "done" }));
         setCurrentStep(1);
+        // Fetch metadata after processor completes
+        fetchMetadata(jobId).then(data => setMetadata(data)).catch(() => {});
       }
       if (msg.includes("Selector]")) {
         setProgress(p => ({ ...p, SELECTOR: "done" }));
         setCurrentStep(2);
+        // Fetch metadata after selector completes
+        fetchMetadata(jobId).then(data => setMetadata(data)).catch(() => {});
       }
       if (msg.includes("[InfoMiner]")) {
         setProgress(p => ({ ...p, INFOMINER: "done" }));
@@ -160,6 +165,28 @@ export default function Console({ jobId, setResults, setPage }) {
                       {step.label}
                     </h3>
                     <p className="text-sm text-gray-400">{step.desc}</p>
+
+                    {step.key === "PROCESSOR" && status === "done" && metadata.processor_output && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        transition={{ delay: 0.2, duration: 0.3 }}
+                        className="mt-2 text-xs text-cyan-200 bg-cyan-500/10 px-3 py-2 rounded-lg border border-cyan-500/20"
+                      >
+                        Parsed Command & Configuration Loaded
+                      </motion.div>
+                    )}
+
+                    {step.key === "SELECTOR" && status === "done" && metadata.selector_output && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        transition={{ delay: 0.2, duration: 0.3 }}
+                        className="mt-2 text-xs text-green-200 bg-green-500/10 px-3 py-2 rounded-lg border border-green-500/20"
+                      >
+                        Selected: <span className="font-semibold">{metadata.selector_output.algorithm}</span> ({metadata.selector_output.package})
+                      </motion.div>
+                    )}
                   </div>
 
                   <div className="flex-shrink-0 pt-3">

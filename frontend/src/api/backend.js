@@ -27,3 +27,6 @@ export const runPipeline = async (command, trainPath, testPath) => {
 
 export const fetchResults = async (jobId) =>
   (await API.get(`/results/${jobId}`)).data;
+
+export const fetchMetadata = async (jobId) =>
+  (await API.get(`/metadata/${jobId}`)).data;
