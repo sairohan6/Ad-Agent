@@ -86,35 +86,58 @@ class AgentProcessor:
             print("[Processor] JSON parse error.")
             return {}
 
-        # Clean paths
-        def clean(x):
-            return os.path.normpath(x) if isinstance(x, str) else x
+        # Normalize paths
+        def clean_path(value):
+            if value is None or str(value).lower() in ["none", "null", ""]:
+                return None
+            return os.path.normpath(value)
 
-        parsed["dataset_train"] = clean(parsed.get("dataset_train"))
-        parsed["dataset_test"] = clean(parsed.get("dataset_test"))
+        parsed["dataset_train"] = clean_path(parsed.get("dataset_train"))
+        parsed["dataset_test"] = clean_path(parsed.get("dataset_test"))
+
+        # Ensure algorithm is always a list
+        algo = parsed.get("algorithm", [])
+        if isinstance(algo, str):
+            parsed["algorithm"] = [algo]
+        elif not isinstance(algo, list):
+            parsed["algorithm"] = []
 
         return parsed
 
     def process_command(self, cmd: str) -> dict:
         parsed = self.extract_config(cmd)
 
-        # ✅ If algorithm missing → let selector decide best one
-        if not parsed.get("algorithm"):
+        # ✅ Detect explicit "run all"
+        user_lower = cmd.lower()
+        if any(keyword in user_lower for keyword in ["run all", "run everything", "all models"]):
             parsed["algorithm"] = ["all"]
+
+        # ✅ If user explicitly names a model (keep first only)
+        elif parsed.get("algorithm"):
+            parsed["algorithm"] = [parsed["algorithm"][0]]
+
+        # ✅ If NO algorithm mentioned → AUTO
+        else:
+            parsed["algorithm"] = []
 
         train = parsed.get("dataset_train")
         test = parsed.get("dataset_test")
 
-        # ✅ NEW: If no test dataset → use train dataset as test dataset
+        # ✅ If no test dataset → use train dataset
         if not test or str(test).lower() in ["", "none", "null"]:
             print("[Processor] No test dataset provided → using training dataset for evaluation.")
             test = train
 
+        # ✅ Ensure parameters is always a dictionary
+        params = parsed.get("parameters")
+        if not isinstance(params, dict):
+            params = {}
+
         self.experiment_config.update({
-            "algorithm": parsed.get("algorithm", []),
+            "algorithm": parsed["algorithm"],
             "dataset_train": train,
             "dataset_test": test,
-            "parameters": parsed.get("parameters", {}),
+            "parameters": params,
         })
 
         print("\n=== Processor Output ===")

@@ -27,7 +27,6 @@ CORS(app,
      methods=["GET", "POST", "OPTIONS"]
 )
 
-
 # MongoDB connection
 try:
     mongo_client = MongoClient('mongodb://localhost:27017/')
@@ -47,11 +46,9 @@ METADATA = {}
 
 
 def run_pipeline(run_id, cmd, train, test):
-    # Initialize storage for logs for this run
     LOG_BUFFERS[run_id] = []
     METADATA[run_id] = {"processor_output": None, "selector_output": None, "dataset_stats": {}}
 
-    # Local log method to push logs into buffer
     def log(msg):
         print(msg)
         LOG_BUFFERS[run_id].append(msg)
@@ -61,15 +58,37 @@ def run_pipeline(run_id, cmd, train, test):
         processor = AgentProcessor()
         cfg = processor.process_command(cmd)
 
-        # Attach dataset paths
-        cfg["dataset_train"] = train
-        cfg["dataset_test"] = test
+        # ----------------------------------------------------
+        # ✅ NEW: Robust dataset handling (Only these lines added)
+        # ----------------------------------------------------
+        if not cfg.get("dataset_train"):
+            cfg["dataset_train"] = train
 
-        # Store processor output
-        METADATA[run_id]["processor_output"] = cfg
+        if not cfg.get("dataset_test"):
+            cfg["dataset_test"] = test
+
+        # If still missing → test = train
+        if not cfg.get("dataset_test"):
+            cfg["dataset_test"] = cfg["dataset_train"]
+
+        if not cfg.get("dataset_train"):
+            raise ValueError("❌ No training dataset provided or detected.")
+
+        log(f"[Processor] Using Train = {cfg['dataset_train']}")
+        log(f"[Processor] Using Test  = {cfg['dataset_test']}")
+
+        # ✅ Normalize run-all
+        algos = cfg.get("algorithm", [])
+        if len(algos) == 1:
+            normalized = algos[0].strip().lower()
+            if normalized in ("all", "run all", "all models", "run_everything"):
+                cfg["algorithm"] = ["all"]
+
         log("PROCESSOR DONE")
+        # ----------------------------------------------------
+        # END of inserted logic
+        # ----------------------------------------------------
 
-        # Full pipeline state
         state: FullToolState = {
             "messages": [],
             "current_tool": "",
@@ -96,7 +115,6 @@ def run_pipeline(run_id, cmd, train, test):
         log("PIPELINE START")
         final = compiled_full_graph.invoke(state)
 
-        # Store selector output
         if final.get("agent_selector"):
             selector = final["agent_selector"]
             METADATA[run_id]["selector_output"] = {
@@ -115,7 +133,6 @@ def run_pipeline(run_id, cmd, train, test):
                 num_samples = X_train.shape[0]
                 num_features = X_train.shape[1] if len(X_train.shape) > 1 else 1
 
-                # Count anomalies if labels exist
                 if isinstance(y_train, np.ndarray) and set(np.unique(y_train)).issubset({0, 1}):
                     num_anomalies = int(np.sum(y_train == 1))
                 else:
@@ -140,7 +157,6 @@ def run_pipeline(run_id, cmd, train, test):
                 "num_anomalies": "Unknown"
             }
 
-        # Store final results (fallback to empty dict if missing)
         result_data = final.get("results", {})
         if isinstance(result_data, dict):
             result_data["dataset_stats"] = METADATA[run_id]["dataset_stats"]
@@ -170,7 +186,6 @@ def run():
     test = data.get("test_path")
 
     run_id = str(uuid.uuid4())
-
     threading.Thread(target=run_pipeline, args=(run_id, cmd, train, test)).start()
 
     return jsonify({"job_id": run_id})
@@ -196,25 +211,20 @@ def stream_logs(run_id):
 @app.get("/results/<run_id>")
 def get_results(run_id):
     result = RESULTS.get(run_id, None)
-
     if result is None:
         return jsonify({"error": "No results found"}), 404
-
     return jsonify(result), 200
 
 
 @app.get("/metadata/<run_id>")
 def get_metadata(run_id):
     metadata = METADATA.get(run_id, None)
-
     if metadata is None:
         return jsonify({"error": "No metadata found"}), 404
-
     return jsonify(metadata), 200
 
 
 # ========== AUTH ENDPOINTS ==========
-
 @app.route("/auth/signup", methods=["POST", "OPTIONS"])
 def signup():
     if request.method == "OPTIONS":
@@ -251,6 +261,7 @@ def signup():
     }, app.config['SECRET_KEY'], algorithm="HS256")
 
     return jsonify({"token": token, "email": email, "name": name}), 201
+
 
 @app.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
