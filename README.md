@@ -153,4 +153,3 @@ Provide cloud execution environment with pre-built configurations
 
 Adaptive model selection based on accuracy-to-cost ratio
 
-GUI based interaction for non-technical users
